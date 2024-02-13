@@ -7,7 +7,7 @@ const products = [
     price: 0.99,
     description: "it's a banana",
     inStock: 10,
-    imageUrl: "https://t.ly/huKbC",
+    imageUrl: "https://m.media-amazon.com/images/I/61lIBeug0NL._AC_SY395_.jpg",
   },
   {
     name: "Carrot",
