@@ -26,6 +26,7 @@ CREATE TABLE "products" (
     "description" VARCHAR(255) NOT NULL,
     "inStock" INTEGER NOT NULL,
     "imageUrl" VARCHAR(255) NOT NULL,
+    "categoryId" INTEGER,
 
     CONSTRAINT "admin_pkey" PRIMARY KEY ("id")
 );
@@ -36,14 +37,25 @@ CREATE TABLE "users" (
     "email" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "firstName" VARCHAR(255) NOT NULL,
-    "isAdmin" BOOLEAN DEFAULT false,
     "lastName" VARCHAR(255) NOT NULL,
+    "isAdmin" BOOLEAN DEFAULT false,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "category" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+
+    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Category_name_key" ON "category"("name");
 
 -- AddForeignKey
 ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -53,3 +65,6 @@ ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_productId_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "orders" ADD CONSTRAINT "orders_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
