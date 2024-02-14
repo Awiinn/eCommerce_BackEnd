@@ -568,13 +568,14 @@ const products = [
   },
 ];
 
+// Users
 const users = [
   {
     email: "aaron@admin.com",
     password: "aaron123",
     firstName: "Aaron",
     lastName: "Kim",
-    isAdmin: false,
+    isAdmin: true,
   },
   {
     email: "mark@admin.com",
@@ -636,21 +637,61 @@ const users = [
 
 const generateData = async () => {
   try {
+    // Delete existing data
     await prisma.products.deleteMany({});
     await prisma.users.deleteMany({});
     await prisma.category.deleteMany({});
-    await prisma.products.createMany({
-      data: products,
-    });
-    await prisma.category.createMany({
+
+    // Create categories
+    const createdCategories = await prisma.category.createMany({
       data: category,
+      skipDuplicates: true,
     });
+
+    // Ensure createdCategories is an array
+    const categories = Array.isArray(createdCategories)
+      ? createdCategories
+      : [createdCategories];
+
+    // Assign categoryId to each product
+    const productsWithCategories = products.map((product) => {
+      const categoryForProduct = categories.find(
+        (cat) => cat.name === product.category
+      );
+
+      if (!categoryForProduct) {
+        throw new Error(`Category not found for product: ${product.name}`);
+      }
+
+      return {
+        ...product,
+        categoryId: categoryForProduct.id,
+      };
+    });
+
+    // Create products with relationships
+    await prisma.products.createMany({
+      data: productsWithCategories,
+      skipDuplicates: true,
+    });
+
+    // Create users
     await prisma.users.createMany({
       data: users,
+      skipDuplicates: true,
     });
+
+    console.log("Data seeding successful!");
   } catch (error) {
-    console.log(error);
+    console.error("Error seeding data:", error);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 generateData();
+
+
+
+
+
