@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/products", require("./api/products.js"));
+app.use("/categories", require("./api/categories.js"));
 app.use("/auth", require("./auth/auth.js"));
 
 app.listen(PORT, () => {
