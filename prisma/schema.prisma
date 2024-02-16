@@ -34,7 +34,7 @@ model products {
   imageUrl     String         @db.VarChar(255)
   categoryId   Int?
   orderDetails orderdetails[]
-  category     category?      @relation(fields: [categoryId], references: [id])
+  categories     categories?      @relation(fields: [categoryId], references: [id])
 }
 
 model users {
@@ -47,8 +47,10 @@ model users {
   orders    orders[]
 }
 
-model category {
+model categories {
   id      Int        @id(map: "Category_pkey") @default(autoincrement())
   name    String     @unique(map: "Category_name_key") @db.VarChar(255)
-  product products[]
+  description String @db.VarChar(255)
+  imageUrl String @db.VarChar(255)
+  products products[]
 }
