@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 /* GET /categories - get all categories */
 router.get("/", async (req, res, next) => {
   try {
-    const categories = await prisma.category.findMany();
+    const categories = await prisma.categories.findMany();
     res.send(categories);
   } catch (error) {
     next(error);

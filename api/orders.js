@@ -28,6 +28,16 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+/* GET /orders - get all orders */
+router.get("/", async (req, res, next) => {
+  try {
+    const orderDetails = await prisma.orderdetails.findMany();
+    res.send(orderDetails);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get("/details/:id", async (req, res, next) => {
   try {
     const orderDetails = await prisma.orderdetails.findFirst({
