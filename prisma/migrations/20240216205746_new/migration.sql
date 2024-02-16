@@ -13,7 +13,7 @@ CREATE TABLE "orders" (
     "items" VARCHAR(255) NOT NULL,
     "total" MONEY NOT NULL,
     "isCart" BOOLEAN NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "userId" INTEGER,
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
 );
@@ -44,9 +44,11 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "category" (
+CREATE TABLE "categories" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
+    "description" VARCHAR(255) NOT NULL,
+    "imageUrl" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
@@ -55,7 +57,7 @@ CREATE TABLE "category" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_name_key" ON "category"("name");
+CREATE UNIQUE INDEX "Category_name_key" ON "categories"("name");
 
 -- AddForeignKey
 ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -67,4 +69,4 @@ ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_productId_fkey" FOREIGN 
 ALTER TABLE "orders" ADD CONSTRAINT "orders_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
