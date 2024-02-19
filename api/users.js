@@ -21,7 +21,7 @@ router.get("/:id", async (req, res, next) => {
       },
     });
     if (!users) {
-      return res.status(404).send("Product was not found");
+      return res.status(404).send("User was not found");
     }
     res.send(users);
   } catch (error) {
