@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
+// const { Decimal } = require("@prisma/client/runtime/library");
 const prisma = new PrismaClient();
-// const { categories, products, users } = require("./data.js");
+const bcrypt = require("bcrypt");
 
 const categories = [
   {
@@ -790,128 +791,138 @@ const products = [
     categoryId: 13,
   },
 ];
+const adminRole = { name: "admin" };
+const userRole = { name: "user" };
+const guestRole = { name: "guest" };
 
-const users = [
+const manageUsersPermission = [{ name: "manage_users" }];
+const placeOrdersPermission = [{ name: "place_orders" }];
+const viewOrderHistoryPermission = [{ name: "view_order_history" }];
+const manageProductsPermission = [{ name: "manage_products" }];
+
+const permissions = [
+  ...manageUsersPermission,
+  ...placeOrdersPermission,
+  ...viewOrderHistoryPermission,
+  ...manageProductsPermission,
+];
+
+const roles = [adminRole, userRole, guestRole];
+
+const adminUser = [
   {
     email: "aaron@admin.com",
     password: "aaron123",
     firstName: "Aaron",
     lastName: "Kim",
-    isAdmin: true,
+    role_id: 1,
   },
   {
     email: "mark@admin.com",
     password: "mark123",
     firstName: "Mark",
     lastName: "Reyes",
-    isAdmin: true,
+    role_id: 1,
   },
   {
     email: "tyrice@admin.com",
-    password: "tyrice123",
+    password: 'tyrice123',
     firstName: "Tyrice",
     lastName: "Freeman",
-    isAdmin: true,
+    role_id: 1,
   },
+];
+
+const regularUser = [
   {
     email: "tyiffany@gmail.com",
     password: "Password123",
     firstName: "Tiffany",
     lastName: "Haddish",
-    isAdmin: false,
+    role_id: 2,
   },
   {
     email: "John@yahoo.com",
     password: "Jdohnad3rsc2",
     firstName: "John",
     lastName: "Deer",
-    isAdmin: false,
+    role_id: 2,
   },
   {
     email: "Konan.Beer@hotmail.com",
     password: "Passhfe45",
     firstName: "Konan",
     lastName: "Beer",
-    isAdmin: false,
+    role_id: 2,
   },
   {
     email: "Oprah@gmail.com",
     password: "IamR$ch",
     firstName: "Oprah",
     lastName: "Whinfrey",
-    isAdmin: false,
+    role_id: 2,
   },
+];
+const guestUser = [
   {
     email: "clark.kent@icloud.com",
     password: "IamSuperMan1",
     firstName: "Clark",
     lastName: "Kent",
-    isAdmin: false,
+    role_id: 3,
   },
   {
     email: "Homer.Simpson@gmail.com",
     password: "D0nuts123",
     firstName: "Homer",
     lastName: "Simpson",
-    isAdmin: false,
+    role_id: 3,
   },
 ];
 
-// const generateData = async () => {
-//   try {
-// Delete existing data
-// await prisma.products.deleteMany({});
-// await prisma.users.deleteMany({});
-// await prisma.categories.deleteMany({});
+const allUsers = [...adminUser, ...regularUser, ...guestUser];
 
-// Create categories
-// const generateCategories = await prisma.categories.createMany({
-//   data: categories,
-//   skipDuplicates: true,
-// });
+const hashPassword = () => {
 
-// Ensure createdCategories is an array
-// const categories = Array.isArray(createdCategories)
-//   ? createdCategories
-//   : [createdCategories];
+}
 
-// Assign categoryId to each product
-// const productsWithCategories = products.map((product) => {
-//   const categoryForProduct = categories.find(
-//     (cat) => cat.name === product.category
-//   );
-
-//   if (!categoryForProduct) {
-//     throw new Error(`Category not found for product: ${product.name}`);
-//   }
-
-//   return {
-//     ...product,
-//     categoryId: categoryForProduct.id,
-//   };
-// });
-
-// Create products with relationships
-// await prisma.products.createMany({
-//   data: productsWithCategories,
-//   skipDuplicates: true,
-// });
-
-// Create users
-//     await prisma.users.createMany({
-//       data: users,
-//       skipDuplicates: true,
-//     });
-
-//     console.log("Data seeding successful!");
-//   } catch (error) {
-//     console.error("Error seeding data:", error);
-//   } finally {
-//     await prisma.$disconnect();
-//   }
+// const orderData = {
+//   user_id: 1,
+//   status: "pending",
+//   items: {
+//     create: [
+//       {
+//         quantity: 2,
+//         price: 10.99,
+//         product: {
+//           connect: { id: 1 },
+//         },
+//       },
+//       {
+//         quantity: 1,
+//         price: 20.99,
+//         product: {
+//           connect: { id: 2 },
+//         },
+//       },
+//     ],
+//     total: Decimal.toJson(),
+//   },
 // };
 
-// generateData();
+const hash = async () => {
+  const salt = 5;
+  for (let user of allUsers) {
+    try {
+      const hashPassword = await bcrypt.hash(user.password, salt);
+      user.password = hashPassword;
+    } catch (error) {
+      console.log(error, "error hashing passwords");
+    }
+  }
+};
+
+hash()
 
 const generateData = async () => {
   try {
@@ -921,13 +932,6 @@ const generateData = async () => {
     console.log("Deleted records in product table");
     await prisma.users.deleteMany();
     console.log("Deleted records in users table");
-
-    // await prisma.$executeRaw`ALTER SEQUENCE products.id RESTART WITH 1`;
-    // console.log("reset products auto increment to 1");
-    // await prisma.$executeRaw`ALTER SEQUENCE categories.id RESTART WITH 1`;
-    // console.log("reset categories auto increment to 1");
-    // await prisma.$executeRaw`ALTER SEQUENCE users.id RESTART WITH 1`;
-    // console.log("reset users auto increment to 1");
 
     await prisma.categories.createMany({
       data: categories,
@@ -941,11 +945,29 @@ const generateData = async () => {
     });
     console.log("Added product data");
 
+    await prisma.roles.createMany({
+      data: roles,
+      skipDuplicates: true,
+    });
+    console.log("Added roles data");
+
+    await prisma.permissions.createMany({
+      data: permissions,
+      skipDuplicates: true,
+    });
+    console.log("Added permissions data");
+
+
     await prisma.users.createMany({
-      data: users,
+      data: allUsers,
       skipDuplicates: true,
     });
     console.log("Added user data");
+
+    // await prisma.orders.create({
+    //   data: orderData,
+    // });
+    console.log("Added order create");
 
     console.log("Data seeding successful!");
   } catch (e) {
