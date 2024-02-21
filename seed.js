@@ -826,7 +826,7 @@ const adminUser = [
   },
   {
     email: "tyrice@admin.com",
-    password: 'tyrice123',
+    password: "tyrice123",
     firstName: "Tyrice",
     lastName: "Freeman",
     role_id: 1,
@@ -882,34 +882,6 @@ const guestUser = [
 
 const allUsers = [...adminUser, ...regularUser, ...guestUser];
 
-const hashPassword = () => {
-
-}
-
-// const orderData = {
-//   user_id: 1,
-//   status: "pending",
-//   items: {
-//     create: [
-//       {
-//         quantity: 2,
-//         price: 10.99,
-//         product: {
-//           connect: { id: 1 },
-//         },
-//       },
-//       {
-//         quantity: 1,
-//         price: 20.99,
-//         product: {
-//           connect: { id: 2 },
-//         },
-//       },
-//     ],
-//     total: Decimal.toJson(),
-//   },
-// };
-
 const hash = async () => {
   const salt = 5;
   for (let user of allUsers) {
@@ -922,7 +894,7 @@ const hash = async () => {
   }
 };
 
-hash()
+hash();
 
 const generateData = async () => {
   try {
@@ -956,7 +928,6 @@ const generateData = async () => {
       skipDuplicates: true,
     });
     console.log("Added permissions data");
-
 
     await prisma.users.createMany({
       data: allUsers,
