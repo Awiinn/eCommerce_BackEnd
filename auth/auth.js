@@ -15,6 +15,7 @@ router.post("/register", async (req, res, next) => {
         lastName: req.body.lastName,
         email: req.body.email,
         password: hashPassword,
+        role: {connect: {id: 2} },
       },
     });
     res.status(201).send({
