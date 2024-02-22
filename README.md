@@ -14,4 +14,6 @@
 # Frontend
 * Follow the link to the front: https://github.com/Awiinn/eCommerce_FrontEnd.git
 * Follow the link to the deployed application via Netlify: https://stalwart-pothos-1e928a.netlify.app/
+* (the deployed reposity is forked under mrkrye, so edits made to the frontend repository may not see update as it is not linked directly)
+
 
