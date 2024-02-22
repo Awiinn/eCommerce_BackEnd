@@ -1,5 +1,5 @@
 # Environment Variables Needed
-* Create .env file in the root directory of the project
+* Create `.env` file in the root directory of the project
 * Create the following .env variables:
   * DATABASE_URL="postgresql://YOUR_POSTGRES_USERNAME:YOUR_POSTGRES_PASSWORD@YOUR_POSTGRES_IP_PORT_COMBINATION/YOUR_POSTGRES_TABLE_NAME?schema=public"
   * JWT=""
