@@ -1,3 +1,6 @@
+# Getting Project Dependencies
+* Run the npm command to install node packages: `npm install`
+
 # Environment Variables Needed
 * Create `.env` file in the root directory of the project
 * Create the following .env variables:
@@ -6,7 +9,6 @@
 * Follow the link to the external DB: https://ecomm-x7ak.onrender.com/
 
 # Backend
-* `npm install`: This will download the node packages
 * `npm run dev`:  This will start the backend server
 
 # Frontend
