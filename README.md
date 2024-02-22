@@ -7,9 +7,9 @@
 
 # Backend
 * `npm install`: This will download the node packages
-* `npm run dev`: This will start the frontend React Application on `http://localhost:5173/`, but check your terminal after running the command to verify.
+* `npm run dev`:  This will start the backend server
 
 # Frontend
-* * Follow the link to the front: https://github.com/Awiinn/eCommerce_FrontEnd.git
+* Follow the link to the front: https://github.com/Awiinn/eCommerce_FrontEnd.git
 * Follow the link to the deployed application via Netlify: https://stalwart-pothos-1e928a.netlify.app/
 
