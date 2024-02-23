@@ -54,4 +54,38 @@ router.get("/details/:id", async (req, res, next) => {
   }
 });
 
+router.post("/", async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.send("Please Log in");
+    }
+    const orders = await prisma.orders.create({
+      data: {
+        userid: req.user.id, 
+      },
+    });
+    const cart = await prisma.cart.findMany({
+      where: {
+        userid: req.user.id,
+      },
+    });
+    let array = [];
+    for (let o of cart)
+      array.push({ productid: o.productid, orderid: orders.id });
+    const orderDetails = await prisma.orderdetails.createMany({
+      data: array,
+    });
+
+    await prisma.cart.deleteMany({
+      where: {
+        userid: req.user.id,
+      },
+    });
+
+    res.send({ orders, orderDetails });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
