@@ -20,7 +20,7 @@ router.get("/:id", async (req, res, next) => {
         id: userId,
       },
       include: {
-        role: true, // Include the role associated with the user
+        role: true, 
       },
     });
     if (!user) {

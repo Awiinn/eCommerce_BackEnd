@@ -64,13 +64,13 @@ router.post("/", async (req, res, next) => {
         userid: req.user.id, 
       },
     });
-    const cart = await prisma.cart.findMany({
+    const order = await prisma.orders.findMany({
       where: {
         userid: req.user.id,
       },
     });
     let array = [];
-    for (let o of cart)
+    for (let o of order)
       array.push({ productid: o.productid, orderid: orders.id });
     const orderDetails = await prisma.orderdetails.createMany({
       data: array,
