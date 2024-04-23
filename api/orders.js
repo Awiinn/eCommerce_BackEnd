@@ -3,8 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
 // Logged in Admin can view any orders based on the input id
-//POST || PATH http://localhost:8080/orders/admin  || (EX: "id": 2 in the Body)
-// TEST APPROVED
+//POST || PATH http://localhost:3000/orders/admin  || 
 router.post("/admin", async (req, res, next) => {
   try {
     if (!req.user) {

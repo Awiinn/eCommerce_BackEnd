@@ -1,10 +1,8 @@
 -- CreateTable
 CREATE TABLE "orderdetails" (
     "id" SERIAL NOT NULL,
-    "productId" INTEGER,
-    "orderId" INTEGER,
-    "quantity" INTEGER NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
+    "productid" INTEGER,
+    "orderid" INTEGER,
 
     CONSTRAINT "orderdetails_pkey" PRIMARY KEY ("id")
 );
@@ -12,10 +10,8 @@ CREATE TABLE "orderdetails" (
 -- CreateTable
 CREATE TABLE "orders" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "items" VARCHAR(255) NOT NULL,
-    "total" MONEY NOT NULL,
-    "isCart" BOOLEAN NOT NULL,
+    "userid" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" TEXT NOT NULL DEFAULT 'pending',
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
@@ -75,6 +71,15 @@ CREATE TABLE "categories" (
 );
 
 -- CreateTable
+CREATE TABLE "cart" (
+    "id" SERIAL NOT NULL,
+    "productid" INTEGER,
+    "userid" INTEGER,
+
+    CONSTRAINT "cart_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_PermissionsToroles" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -99,19 +104,25 @@ CREATE UNIQUE INDEX "_PermissionsToroles_AB_unique" ON "_PermissionsToroles"("A"
 CREATE INDEX "_PermissionsToroles_B_index" ON "_PermissionsToroles"("B");
 
 -- AddForeignKey
-ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_orderid_fkey" FOREIGN KEY ("orderid") REFERENCES "orders"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "orderdetails" ADD CONSTRAINT "orderdetails_productid_fkey" FOREIGN KEY ("productid") REFERENCES "products"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "orders" ADD CONSTRAINT "orders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "orders" ADD CONSTRAINT "orders_userid_fkey" FOREIGN KEY ("userid") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "cart" ADD CONSTRAINT "cart_productid_fkey" FOREIGN KEY ("productid") REFERENCES "products"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "cart" ADD CONSTRAINT "cart_userid_fkey" FOREIGN KEY ("userid") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "_PermissionsToroles" ADD CONSTRAINT "_PermissionsToroles_A_fkey" FOREIGN KEY ("A") REFERENCES "Permissions"("id") ON DELETE CASCADE ON UPDATE CASCADE;

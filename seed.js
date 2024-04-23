@@ -896,6 +896,136 @@ const hash = async () => {
 
 hash();
 
+async function createCart({ productid, userid }) {
+  try {
+   
+    const existingProduct = await prisma.products.findUnique({
+      where: {
+        id: productid,
+      },
+    });
+
+    if (!existingProduct) {
+      console.error(`Product with ID ${productid} does not exist.`);
+      return;
+    }
+
+    await prisma.cart.create({
+      data: {
+        productid,
+        userid,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function createInitialCart() {
+  try {
+    console.log("Starting to create cart...");
+    await createCart({
+      productid: 1,
+      userid: 1,
+    });
+    await createCart({
+      productid: 2,
+      userid: 1,
+    });
+    await createCart({
+      productid: 3,
+      userid: 1,
+    });
+    await createCart({
+      productid: 4,
+      userid: 1,
+    });
+    console.log("Finished creating cart!");
+  } catch (error) {
+    console.error("Error creating cart!");
+    throw error;
+  }
+}
+
+async function createInitialOrders() {
+  try {
+    console.log("Starting to create orders...");
+    await createOrders({
+      userid: 1,
+    });
+    await createOrders({
+      userid: 2,
+    });
+    await createOrders({
+      userid: 3,
+    });
+    console.log("Finished creating orders!");
+  } catch (error) {
+    console.error("Error creating orders!");
+    throw error;
+  }
+}
+async function createOrderDetails({ productid, orderid }) {
+  try {
+    const existingProduct = await prisma.products.findUnique({
+      where: {
+        id: productid,
+      },
+    });
+
+    if (!existingProduct) {
+      console.error(`Product with ID ${productid} does not exist.`);
+      return;
+    }
+
+    await prisma.orderdetails.create({
+      data: {
+        productid,
+        orderid,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function createInitialOrderDetails() {
+  try {
+    console.log("Starting to create orderDetails...");
+    await createOrderDetails({
+      productid: 1,
+      orderid: 1,
+    });
+    await createOrderDetails({
+      productid: 2,
+      orderid: 1,
+    });
+    await createOrderDetails({
+      productid: 1,
+      orderid: 2,
+    });
+    await createOrderDetails({
+      productid: 1,
+      orderid: 3,
+    });
+    console.log("Finished creating orderDetails!");
+  } catch (error) {
+    console.error("Error creating orderDetails!");
+    throw error;
+  }
+}
+async function createOrders({ userid }) {
+  try {
+    await prisma.orders.create({
+      data: {
+        userid,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
 const generateData = async () => {
   try {
     await prisma.categories.deleteMany();
@@ -935,10 +1065,9 @@ const generateData = async () => {
     });
     console.log("Added user data");
 
-    // await prisma.orders.create({
-    //   data: orderData,
-    // });
-    console.log("Added order create");
+    await createInitialOrders();
+    await createInitialOrderDetails();
+    await createInitialCart();
 
     console.log("Data seeding successful!");
   } catch (e) {
@@ -948,5 +1077,7 @@ const generateData = async () => {
     await prisma.$disconnect();
   }
 };
+
+
 
 generateData();
