@@ -38,6 +38,7 @@ model products {
   categoryId   Int?
   orderDetails orderdetails[]
   categories     categories?      @relation(fields: [categoryId], references: [id])
+  cart               cart[]
 }
 
 model users {
@@ -51,6 +52,7 @@ model users {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   orders    orders[]
+  cart               cart[]
 }
 
 model roles {
@@ -72,4 +74,12 @@ model categories {
   description String @db.VarChar(255)
   imageUrl String @db.VarChar(255)
   products products[]
+}
+
+model cart {
+  id        Int       @id @default(autoincrement())
+  productid Int?
+  userid    Int?
+  products  products? @relation(fields: [productid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users     users?    @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
