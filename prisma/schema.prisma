@@ -9,23 +9,19 @@ datasource db {
 
 model orderdetails {
   id        Int       @id @default(autoincrement())
-  productId Int?
-  orderId   Int?
-  orders    orders?   @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  quantity   Int
-  price      Float
-  products  products? @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  productid Int?
+  orderid   Int?
+  orders    orders?   @relation(fields: [orderid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products  products? @relation(fields: [productid], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model orders {
   id           Int            @id @default(autoincrement())
-  user_id   Int
-  items        String         @db.VarChar(255)
-  total        Decimal        @db.Money
-  isCart       Boolean
+  userid   Int
   orderDetails orderdetails[]
+  createdAt   DateTime  @default(now())
   status    String    @default("pending")
-  users        users?          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users        users?          @relation(fields: [userid], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model products {
@@ -37,6 +33,7 @@ model products {
   imageUrl     String         @db.VarChar(255)
   categoryId   Int?
   orderDetails orderdetails[]
+  cart               cart[]
   categories     categories?      @relation(fields: [categoryId], references: [id])
 }
 
@@ -51,6 +48,7 @@ model users {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   orders    orders[]
+  cart               cart[]
 }
 
 model roles {
@@ -72,4 +70,12 @@ model categories {
   description String @db.VarChar(255)
   imageUrl String @db.VarChar(255)
   products products[]
+}
+
+model cart {
+  id        Int       @id @default(autoincrement())
+  productid Int?
+  userid    Int?
+  products  products? @relation(fields: [productid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users     users?    @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
